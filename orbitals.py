@@ -86,6 +86,6 @@ class TestCase(unittest.TestCase):
     extend unittest.TestCase in order to pass parameters to tests
 
     """
-    def __init__(self, testname, parameters):
+    def __init__(self, testname, parameters=None):
         super(TestCase, self).__init__(testname)
         self.parameters = parameters
