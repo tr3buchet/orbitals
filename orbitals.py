@@ -79,3 +79,13 @@ class EventedTextTestRunner(unittest.TextTestRunner):
         else:
             self.stream.writeln("OK")
         return result
+
+
+class TestCase(unittest.TestCase):
+    """
+    extend unittest.TestCase in order to pass parameters to tests
+
+    """
+    def __init__(self, testname, parameters):
+        super(TestCase, self).__init__(testname)
+        self.parameters = parameters

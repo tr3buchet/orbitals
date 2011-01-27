@@ -1,18 +1,13 @@
-import unittest
 import time
 from orbitals import EventedTestSuite
 from orbitals import EventedTextTestRunner
+from orbitals import TestCase
 
-class WhizzleGooberTestCase(unittest.TestCase):
+class WhizzleGooberTestCase(TestCase):
     """
-    extend the unittest.TestCase in order to use eventlet
-    and allow for passing parameters to tests
+    extend the orbitals.TestCase to create an orbitals test case
 
     """
-
-    def __init__(self, testname, s):
-        super(WhizzleGooberTestCase, self).__init__(testname)
-        self.s = s
 
     @staticmethod
     def suite():
@@ -23,8 +18,8 @@ class WhizzleGooberTestCase(unittest.TestCase):
         suite = EventedTestSuite()
         # add the tests giving each a parameter
         # (can easily be adapted to a set of parameters)
-        suite.addTest(WhizzleGooberTestCase("test1","arrr"))
-        suite.addTest(WhizzleGooberTestCase("test2","barrr"))
+        suite.addTest(WhizzleGooberTestCase('test1',{'string': 'arrr'}))
+        suite.addTest(WhizzleGooberTestCase('test2',{'string': 'barrr'}))
         return suite
 
     def setUp(self):
@@ -39,7 +34,7 @@ class WhizzleGooberTestCase(unittest.TestCase):
         very simple test
 
         """
-        print "test1 arg |%s|" % self.s
+        print "test1 arg |%s|" % self.parameters
         time.sleep(5)
         print "done"
 
@@ -48,7 +43,7 @@ class WhizzleGooberTestCase(unittest.TestCase):
         very simple test
 
         """
-        print "test2 arg |%s|" % self.s
+        print "test2 arg |%s|" % self.parameters
         time.sleep(5)
         print "done"
 
