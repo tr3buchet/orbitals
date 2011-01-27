@@ -1,0 +1,10 @@
+to install:
+    clone and you're all set
+    make sure to install dependencies (python, eventlet, etc)
+
+to use:
+    cd repo
+    python orbitals_testcase.py
+
+    you can modify the thread test cases and thread test suites booleans
+    to modify the threading behavior

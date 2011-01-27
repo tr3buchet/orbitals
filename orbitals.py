@@ -1,5 +1,4 @@
 import unittest
-import types
 import time
 
 import eventlet
