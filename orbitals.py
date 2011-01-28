@@ -7,6 +7,7 @@ patcher.monkey_patch(all=True)
 
 pool = eventlet.GreenPool()
 
+
 class EventedTestSuite(unittest.TestSuite):
     """
     extends unittest.TestSuite by adding eventlet thread spawning to
@@ -31,7 +32,7 @@ class EventedTestSuite(unittest.TestSuite):
         for test in self._tests:
             if isinstance(test, EventedTestSuite):
                 if(self.thread_suites):
-                    self.pool.spawn_n(test,result)
+                    self.pool.spawn_n(test, result)
                 else:
                     pool.waitall()
                     test(result)
@@ -73,7 +74,8 @@ class EventedTextTestRunner(unittest.TextTestRunner):
             if failed:
                 self.stream.write("failures=%d" % failed)
             if errored:
-                if failed: self.stream.write(", ")
+                if failed:
+                    self.stream.write(", ")
                 self.stream.write("errors=%d" % errored)
             self.stream.writeln(")")
         else:

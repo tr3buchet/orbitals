@@ -3,6 +3,7 @@ from orbitals import EventedTestSuite
 from orbitals import EventedTextTestRunner
 from orbitals import TestCase
 
+
 class WhizzleGooberTestCase(TestCase):
     """
     extend the orbitals.TestCase to create an orbitals test case
@@ -18,8 +19,8 @@ class WhizzleGooberTestCase(TestCase):
         suite = EventedTestSuite()
         # add the tests giving each a parameter
         # (can easily be adapted to a set of parameters)
-        suite.addTest(WhizzleGooberTestCase('test1',{'string': 'arrr'}))
-        suite.addTest(WhizzleGooberTestCase('test2',{'string': 'barrr'}))
+        suite.addTest(WhizzleGooberTestCase('test1', {'string': 'arrr'}))
+        suite.addTest(WhizzleGooberTestCase('test2', {'string': 'barrr'}))
         return suite
 
     def setUp(self):
@@ -59,8 +60,8 @@ if __name__ == '__main__':
     # generate the list of suites to be run
     # this is an arbitrary example
     suites = []
-    some_list = ["hello","world","eva","orbitals","doctor","ellingham"]
-    for i in range(len(some_list)/2):
+    some_list = ["hello", "world", "eva", "orbitals", "doctor", "ellingham"]
+    for i in range(len(some_list) / 2):
         suites.append(suite)
 
     # turn suites into a super suite (suite containing suites)
