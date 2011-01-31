@@ -1,4 +1,5 @@
 import time
+from orbitals import Orbitals
 from orbitals import EventedTestSuite
 from orbitals import EventedTextTestRunner
 from orbitals import TestCase
@@ -21,6 +22,7 @@ class WhizzleGooberTestCase(TestCase):
         # (can easily be adapted to a set of parameters)
         suite.addTest(WhizzleGooberTestCase('test1', {'string': 'arrr'}))
         suite.addTest(WhizzleGooberTestCase('test2', {'string': 'barrr'}))
+        suite.thread_testcases = False
         return suite
 
     def setUp(self):
@@ -49,26 +51,72 @@ class WhizzleGooberTestCase(TestCase):
         print "done"
 
 
-if __name__ == '__main__':
+class GadgetTestCase(TestCase):
+    """
+    extend the orbitals.TestCase to create an orbitals test case
 
-    # create the suite
-    suite = WhizzleGooberTestCase.suite()
+    """
 
-    # define whether we thread testcases
-    suite.thread_testcases = False
+    @staticmethod
+    def suite():
+        """
+        define the suite of tests to be run
 
-    # generate the list of suites to be run
-    # this is an arbitrary example
-    suites = []
-    some_list = ["hello", "world", "eva", "orbitals", "doctor", "ellingham"]
-    for i in range(len(some_list) / 2):
-        suites.append(suite)
+        """
+        suite = EventedTestSuite()
+        # add the tests giving each a parameter
+        # (can easily be adapted to a set of parameters)
+        suite.addTest(GadgetTestCase('test1', {'string': 'xarrr'}))
+        suite.addTest(GadgetTestCase('test2', {'string': 'xbarrr'}))
+        suite.thread_testcases = True
+        return suite
 
-    # turn suites into a super suite (suite containing suites)
-    suites = EventedTestSuite(suites)
+    def setUp(self):
+        """
+        anything to be run before each test goes here
 
-    # define whether we thread the suites
-    suites.thread_suites = True
+        """
+        pass
 
-    # kick off the tests
-    EventedTextTestRunner(verbosity=2).run(suites)
+    def test1(self):
+        """
+        very simple test
+
+        """
+        print "test1 arg |%s|" % self.parameters
+        time.sleep(5)
+        print "done"
+
+    def test2(self):
+        """
+        very simple test
+
+        """
+        print "test2 arg |%s|" % self.parameters
+        time.sleep(5)
+        print "done"
+
+
+class UberTestCase(TestCase):
+    """
+    extend the orbitals.TestCase to create an orbitals test case
+    in this example this is a super TestCase which uses other test
+    cases
+
+    """
+
+    @staticmethod
+    def suite():
+        """
+        define the suite of tests to be run
+
+        """
+        suites = []
+        suites.append(WhizzleGooberTestCase.suite())
+        suites.append(GadgetTestCase.suite())
+        suites = EventedTestSuite(suites)
+        suites.thread_suites = False
+        return suites
+
+
+main = Orbitals(UberTestCase)

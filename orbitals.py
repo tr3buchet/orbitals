@@ -91,3 +91,12 @@ class TestCase(unittest.TestCase):
     def __init__(self, testname, parameters=None):
         super(TestCase, self).__init__(testname)
         self.parameters = parameters
+
+
+class Orbitals(object):
+    def __init__(self, test_class):
+        EventedTextTestRunner(verbosity=2).run(test_class.suite())
+
+
+
+main = Orbitals
