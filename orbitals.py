@@ -2,8 +2,7 @@ import unittest
 import time
 
 import eventlet
-from eventlet import patcher
-patcher.monkey_patch(all=True)
+eventlet.patcher.monkey_patch(all=True)
 
 pool = eventlet.GreenPool()
 
