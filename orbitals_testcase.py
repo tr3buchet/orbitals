@@ -18,7 +18,7 @@ class CreateInstance(orbitals.TestCase):
         """
         suite = orbitals.EventedTestSuite()
         suite.addTest(CreateInstance('create_instance',
-                                     {'flavor': '1', 'image':'2'}))
+                                     {'flavor': '1', 'image':'6'}))
         suite.addTest(CreateInstance('create_instance',
                                      {'flavvor': '1', 'image':'2'}))
         suite.addTest(CreateInstance('test2', {'string': 'barrr'}))
