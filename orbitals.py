@@ -91,6 +91,16 @@ class TestCase(unittest.TestCase):
         super(TestCase, self).__init__(testname)
         self.parameters = parameters
 
+    def assert_no_errors(self, obj):
+        self.assertTrue(not obj.errors, str(obj.errors.full_messages()))
+
+    def assert_errors(self, obj, string):
+        self.assertTrue(obj.errors, string)
+
+    def assert_parameters(self, *parameters):
+        for p in parameters:
+            self.assertTrue(p in self.parameters)
+
 
 class Orbitals(object):
     def __init__(self, test_class):

@@ -1,10 +1,12 @@
 import time
 import orbitals
+import cloudservers
+cs = cloudservers.CloudServers('admin', 'admin', 'http://localhost:8774/v1.0/')
 
 
-class WhizzleGooberTestCase(orbitals.TestCase):
+class CreateInstance(orbitals.TestCase):
     """
-    extend the orbitals.TestCase to create an orbitals test case
+    Tests creating an instance
 
     """
 
@@ -15,10 +17,11 @@ class WhizzleGooberTestCase(orbitals.TestCase):
 
         """
         suite = orbitals.EventedTestSuite()
-        # add the tests giving each a parameter
-        # (can easily be adapted to a set of parameters)
-        suite.addTest(WhizzleGooberTestCase('test1', {'string': 'arrr'}))
-        suite.addTest(WhizzleGooberTestCase('test2', {'string': 'barrr'}))
+        suite.addTest(CreateInstance('create_instance',
+                                     {'flavor': '1', 'image':'2'}))
+        suite.addTest(CreateInstance('create_instance',
+                                     {'flavvor': '1', 'image':'2'}))
+        suite.addTest(CreateInstance('test2', {'string': 'barrr'}))
         suite.thread_testcases = False
         return suite
 
@@ -29,14 +32,23 @@ class WhizzleGooberTestCase(orbitals.TestCase):
         """
         pass
 
-    def test1(self):
+    def create_instance(self):
         """
-        very simple test
+        tests creating an instance
+        flavor and image are expected to be set in self.parameter
 
         """
-        print "test1 arg |%s|" % self.parameters
-        time.sleep(5)
-        print "done"
+        self.assert_parameters('flavor', 'image')
+        flavor = self.parameters['flavor']
+        image = self.parameters['image']
+        print "YAY"
+        instance = cs.servers.create('stupid', image, flavor)
+#        instance.wait_for_status('active', timer='create')
+#        self.assert_no_errors(instance)
+#        instance.destroy()
+#        s.destroy()
+#        self.assert_no_errors(instance)
+
 
     def test2(self):
         """
@@ -44,7 +56,7 @@ class WhizzleGooberTestCase(orbitals.TestCase):
 
         """
         print "test2 arg |%s|" % self.parameters
-        time.sleep(5)
+        time.sleep(3)
         print "done"
 
 
@@ -81,7 +93,7 @@ class GadgetTestCase(orbitals.TestCase):
 
         """
         print "test1 arg |%s|" % self.parameters
-        time.sleep(5)
+        time.sleep(3)
         print "done"
 
     def test2(self):
@@ -90,30 +102,5 @@ class GadgetTestCase(orbitals.TestCase):
 
         """
         print "test2 arg |%s|" % self.parameters
-        time.sleep(5)
+        time.sleep(3)
         print "done"
-
-
-class UberTestCase(orbitals.TestCase):
-    """
-    extend the orbitals.TestCase to create an orbitals test case
-    in this example this is a super TestCase which uses other test
-    cases
-
-    """
-
-    @staticmethod
-    def suite():
-        """
-        define the suite of tests to be run
-
-        """
-        suites = []
-        suites.append(WhizzleGooberTestCase.suite())
-        suites.append(GadgetTestCase.suite())
-        suites = orbitals.EventedTestSuite(suites)
-        suites.thread_suites = False
-        return suites
-
-
-main = orbitals.Orbitals(UberTestCase)
