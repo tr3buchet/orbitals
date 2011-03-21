@@ -1,8 +1,8 @@
 import time
-import orbitals
+from orbitals import Orbitals, TestCase, EventedTestSuite
 
 
-class WhizzleGooberTestCase(orbitals.TestCase):
+class WhizzleGooberTestCase(TestCase):
     """
     extend the orbitals.TestCase to create an orbitals test case
 
@@ -14,7 +14,7 @@ class WhizzleGooberTestCase(orbitals.TestCase):
         define the suite of tests to be run
 
         """
-        suite = orbitals.EventedTestSuite()
+        suite = EventedTestSuite()
         # add the tests giving each a parameter
         # (can easily be adapted to a set of parameters)
         suite.addTest(WhizzleGooberTestCase('test1', {'string': 'arrr'}))
@@ -55,7 +55,7 @@ class WhizzleGooberTestCase(orbitals.TestCase):
         print "done"
 
 
-class GadgetTestCase(orbitals.TestCase):
+class GadgetTestCase(TestCase):
     """
     extend the orbitals.TestCase to create an orbitals test case
 
@@ -67,7 +67,7 @@ class GadgetTestCase(orbitals.TestCase):
         define the suite of tests to be run
 
         """
-        suite = orbitals.EventedTestSuite()
+        suite = EventedTestSuite()
         # add the tests giving each a parameter
         # (can easily be adapted to a set of parameters)
         suite.addTest(GadgetTestCase('test1', {'string': 'xarrr'}))
@@ -108,7 +108,7 @@ class GadgetTestCase(orbitals.TestCase):
         print "done"
 
 
-class UberTestCase(orbitals.TestCase):
+class UberTestCase(TestCase):
     """
     extend the orbitals.TestCase to create an orbitals test case
     in this example this is a super TestCase which uses other test
@@ -125,9 +125,9 @@ class UberTestCase(orbitals.TestCase):
         suites = []
         suites.append(WhizzleGooberTestCase.suite())
         suites.append(GadgetTestCase.suite())
-        suites = orbitals.EventedTestSuite(suites)
+        suites = EventedTestSuite(suites)
         suites.thread_suites = False
         return suites
 
 
-main = orbitals.Orbitals(UberTestCase)
+main = Orbitals(UberTestCase)
