@@ -5,14 +5,12 @@ import orbitals_testcase
 class StressTest(TestCase):
     """
     Stress test for hitting nova hard and watching what happens
-
     """
 
     @staticmethod
     def suite():
         """
         define the suite of tests to be run
-
         """
         suites = []
         suites.append(orbitals_testcase.CreateInstance.suite())

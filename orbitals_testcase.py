@@ -7,14 +7,12 @@ cs = cloudservers.CloudServers('admin', 'admin', 'http://localhost:8774/v1.0/')
 class CreateInstance(TestCase):
     """
     Tests creating an instance
-
     """
 
     @staticmethod
     def suite():
         """
         define the suite of tests to be run
-
         """
         suite = EventedTestSuite()
         suite.addTest(CreateInstance('create_instance',
@@ -28,14 +26,12 @@ class CreateInstance(TestCase):
     def setUp(self):
         """
         anything to be run before each test goes here
-
         """
         print "before"
 
     def tearDown(self):
         """
         anything to be run after each test goes here
-
         """
         print "after"
 
@@ -43,7 +39,6 @@ class CreateInstance(TestCase):
         """
         tests creating an instance
         flavor and image are expected to be set in self.parameter
-
         """
         self.assert_parameters('flavor', 'image')
         flavor = self.parameters['flavor']
@@ -60,7 +55,6 @@ class CreateInstance(TestCase):
     def test2(self):
         """
         very simple test
-
         """
         print "test2 arg |%s|" % self.parameters
         time.sleep(3)
@@ -70,14 +64,12 @@ class CreateInstance(TestCase):
 class GadgetTestCase(TestCase):
     """
     extend the orbitals.TestCase to create an orbitals test case
-
     """
 
     @staticmethod
     def suite():
         """
         define the suite of tests to be run
-
         """
         suite = EventedTestSuite()
         # add the tests giving each a parameter
@@ -90,21 +82,18 @@ class GadgetTestCase(TestCase):
     def setUp(self):
         """
         anything to be run before each test goes here
-
         """
         pass
 
     def tearDown(self):
         """
         anything to be run after each test goes here
-
         """
         pass
 
     def test1(self):
         """
         very simple test
-
         """
         print "test1 arg |%s|" % self.parameters
         time.sleep(3)
@@ -113,7 +102,6 @@ class GadgetTestCase(TestCase):
     def test2(self):
         """
         very simple test
-
         """
         print "test2 arg |%s|" % self.parameters
         time.sleep(3)
