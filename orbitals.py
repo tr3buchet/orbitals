@@ -95,7 +95,3 @@ class TestCase(unittest.TestCase):
 class Orbitals(object):
     def __init__(self, test_class):
         EventedTextTestRunner(verbosity=2).run(test_class.suite())
-
-
-
-main = Orbitals

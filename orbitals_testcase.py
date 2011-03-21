@@ -27,7 +27,14 @@ class WhizzleGooberTestCase(orbitals.TestCase):
         anything to be run before each test goes here
 
         """
-        pass
+        print "before"
+
+    def tearDown(self):
+        """
+        anything to be run after each test goes here
+
+        """
+        print "after"
 
     def test1(self):
         """
@@ -71,6 +78,13 @@ class GadgetTestCase(orbitals.TestCase):
     def setUp(self):
         """
         anything to be run before each test goes here
+
+        """
+        pass
+
+    def tearDown(self):
+        """
+        anything to be run after each test goes here
 
         """
         pass
