@@ -1,10 +1,10 @@
 import time
-import orbitals
+from orbitals import Orbitals, TestCase, EventedTestSuite
 import cloudservers
 cs = cloudservers.CloudServers('admin', 'admin', 'http://localhost:8774/v1.0/')
 
 
-class CreateInstance(orbitals.TestCase):
+class CreateInstance(TestCase):
     """
     Tests creating an instance
 
@@ -16,7 +16,7 @@ class CreateInstance(orbitals.TestCase):
         define the suite of tests to be run
 
         """
-        suite = orbitals.EventedTestSuite()
+        suite = EventedTestSuite()
         suite.addTest(CreateInstance('create_instance',
                                      {'flavor': '1', 'image':'6'}))
         suite.addTest(CreateInstance('create_instance',
@@ -67,7 +67,7 @@ class CreateInstance(orbitals.TestCase):
         print "done"
 
 
-class GadgetTestCase(orbitals.TestCase):
+class GadgetTestCase(TestCase):
     """
     extend the orbitals.TestCase to create an orbitals test case
 
@@ -79,7 +79,7 @@ class GadgetTestCase(orbitals.TestCase):
         define the suite of tests to be run
 
         """
-        suite = orbitals.EventedTestSuite()
+        suite = EventedTestSuite()
         # add the tests giving each a parameter
         # (can easily be adapted to a set of parameters)
         suite.addTest(GadgetTestCase('test1', {'string': 'xarrr'}))
@@ -118,3 +118,6 @@ class GadgetTestCase(orbitals.TestCase):
         print "test2 arg |%s|" % self.parameters
         time.sleep(3)
         print "done"
+
+
+main = Orbitals(UberTestCase)

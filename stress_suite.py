@@ -1,8 +1,8 @@
 import time
-import orbitals
+from orbitals import Orbitals, TestCase, EventedTestSuite
 import orbitals_testcase
 
-class StressTest(orbitals.TestCase):
+class StressTest(TestCase):
     """
     Stress test for hitting nova hard and watching what happens
 
@@ -17,9 +17,9 @@ class StressTest(orbitals.TestCase):
         suites = []
         suites.append(orbitals_testcase.CreateInstance.suite())
         suites.append(orbitals_testcase.GadgetTestCase.suite())
-        suites = orbitals.EventedTestSuite(suites)
+        suites = EventedTestSuite(suites)
         suites.thread_suites = False
         return suites
 
 
-main = orbitals.Orbitals(StressTest)
+main = Orbitals(StressTest)
