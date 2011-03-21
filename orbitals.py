@@ -11,12 +11,10 @@ class EventedTestSuite(unittest.TestSuite):
     """
     extends unittest.TestSuite by adding eventlet thread spawning to
     global pool
-
     """
     def __init__(self, tests=(), pool=pool):
         """
         extended __init__ to set self.pool to global pool
-
         """
         self.pool = pool
         unittest.TestSuite.__init__(self, tests)
@@ -26,7 +24,6 @@ class EventedTestSuite(unittest.TestSuite):
     def run(self, result):
         """
         extend run to spawn threads
-
         """
         for test in self._tests:
             if isinstance(test, EventedTestSuite):
@@ -46,12 +43,10 @@ class EventedTextTestRunner(unittest.TextTestRunner):
     """
     extend unittest.TextTestRunner by having run wait for the threads in
     global pool to finish before tabulating test results
-
     """
     def run(self, test, pool=pool):
         """
         extend run to wait for global pool to finish
-
         """
         result = self._makeResult()
         startTime = time.time()
@@ -85,7 +80,6 @@ class EventedTextTestRunner(unittest.TextTestRunner):
 class TestCase(unittest.TestCase):
     """
     extend unittest.TestCase in order to pass parameters to tests
-
     """
     def __init__(self, testname, parameters=None):
         super(TestCase, self).__init__(testname)

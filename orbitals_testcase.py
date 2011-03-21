@@ -5,14 +5,12 @@ from orbitals import Orbitals, TestCase, EventedTestSuite
 class WhizzleGooberTestCase(TestCase):
     """
     extend the orbitals.TestCase to create an orbitals test case
-
     """
 
     @staticmethod
     def suite():
         """
         define the suite of tests to be run
-
         """
         suite = EventedTestSuite()
         # add the tests giving each a parameter
@@ -25,21 +23,18 @@ class WhizzleGooberTestCase(TestCase):
     def setUp(self):
         """
         anything to be run before each test goes here
-
         """
         print "before"
 
     def tearDown(self):
         """
         anything to be run after each test goes here
-
         """
         print "after"
 
     def test1(self):
         """
         very simple test
-
         """
         print "test1 arg |%s|" % self.parameters
         time.sleep(5)
@@ -48,7 +43,6 @@ class WhizzleGooberTestCase(TestCase):
     def test2(self):
         """
         very simple test
-
         """
         print "test2 arg |%s|" % self.parameters
         time.sleep(5)
@@ -58,14 +52,12 @@ class WhizzleGooberTestCase(TestCase):
 class GadgetTestCase(TestCase):
     """
     extend the orbitals.TestCase to create an orbitals test case
-
     """
 
     @staticmethod
     def suite():
         """
         define the suite of tests to be run
-
         """
         suite = EventedTestSuite()
         # add the tests giving each a parameter
@@ -78,21 +70,18 @@ class GadgetTestCase(TestCase):
     def setUp(self):
         """
         anything to be run before each test goes here
-
         """
         pass
 
     def tearDown(self):
         """
         anything to be run after each test goes here
-
         """
         pass
 
     def test1(self):
         """
         very simple test
-
         """
         print "test1 arg |%s|" % self.parameters
         time.sleep(5)
@@ -101,7 +90,6 @@ class GadgetTestCase(TestCase):
     def test2(self):
         """
         very simple test
-
         """
         print "test2 arg |%s|" % self.parameters
         time.sleep(5)
@@ -113,14 +101,12 @@ class UberTestCase(TestCase):
     extend the orbitals.TestCase to create an orbitals test case
     in this example this is a super TestCase which uses other test
     cases
-
     """
 
     @staticmethod
     def suite():
         """
         define the suite of tests to be run
-
         """
         suites = []
         suites.append(WhizzleGooberTestCase.suite())
