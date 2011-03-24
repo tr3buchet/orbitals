@@ -20,22 +20,36 @@ class WhizzleGooberTestCase(TestCase):
         suite.thread_testcases = False
         return suite
 
+    @classmethod
+    def setUpClass(cls):
+        cls.something = "yeargh!"
+        cls.something_else = "blorb"
+        time.sleep(5)
+        print "setup class |%s|" % cls.__name__
+
+    @classmethod
+    def tearDownClass(cls):
+        print "teardown class |%s|" % cls.__name__
+
     def setUp(self):
         """
         anything to be run before each test goes here
         """
-        print "before"
+        print "\nbefore test"
 
     def tearDown(self):
         """
         anything to be run after each test goes here
         """
-        print "after"
+        print "after test"
 
     def test1(self):
         """
         very simple test
         """
+        # example of using something from setUpClass
+        if(self.something):
+            self.something = "works!"
         print "test1 arg |%s|" % self.parameters
         time.sleep(5)
         print "done"
@@ -66,6 +80,17 @@ class GadgetTestCase(TestCase):
         suite.addTest(GadgetTestCase('test2', {'string': 'xbarrr'}))
         suite.thread_testcases = True
         return suite
+
+    @classmethod
+    def setUpClass(cls):
+        cls.something = "yeargh!"
+        cls.something_else = "blorb"
+        time.sleep(5)
+        print "setup class |%s|" % cls.__name__
+
+    @classmethod
+    def tearDownClass(cls):
+        print "teardown class |%s|" % cls.__name__
 
     def setUp(self):
         """

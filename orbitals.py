@@ -7,6 +7,27 @@ eventlet.patcher.monkey_patch(all=True)
 pool = eventlet.GreenPool()
 
 
+class TestCaseHandler(object):
+    """
+    manages class setup and teardown functions
+    """
+    class_semaphores = {}
+    instantiated_classes = []
+
+    @classmethod
+    def setUpClass(cls, c):
+        if c not in cls.class_semaphores:
+            cls.class_semaphores[c] = eventlet.semaphore.Semaphore()
+        with cls.class_semaphores[c]:
+            if c not in cls.instantiated_classes:
+                cls.instantiated_classes.append(c)
+                c.setUpClass()
+
+    @classmethod
+    def tearDownClasses(cls):
+        for c in cls.instantiated_classes:
+            c.tearDownClass()
+
 class EventedTestSuite(unittest.TestSuite):
     """
     extends unittest.TestSuite by adding eventlet thread spawning to
@@ -33,6 +54,8 @@ class EventedTestSuite(unittest.TestSuite):
                     pool.waitall()
                     test(result)
             else:
+                # setup class if necessary
+                TestCaseHandler.setUpClass(test.__class__)
                 if(self.thread_testcases):
                     self.pool.spawn_n(test, result)
                 else:
@@ -53,6 +76,7 @@ class EventedTextTestRunner(unittest.TextTestRunner):
         test(result)
 
         pool.waitall()
+        TestCaseHandler.tearDownClasses()
 
         stopTime = time.time()
         timeTaken = stopTime - startTime
@@ -81,6 +105,15 @@ class TestCase(unittest.TestCase):
     """
     extend unittest.TestCase in order to pass parameters to tests
     """
+
+    @classmethod
+    def setUpClass(cls):
+        pass
+
+    @classmethod
+    def tearDownClass(cls):
+        pass
+
     def __init__(self, testname, parameters=None):
         super(TestCase, self).__init__(testname)
         self.parameters = parameters
