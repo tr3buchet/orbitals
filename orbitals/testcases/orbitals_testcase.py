@@ -1,5 +1,5 @@
 import time
-from orbitals import Orbitals, TestCase, EventedTestSuite
+from orbitals import TestCase, EventedTestSuite
 
 
 class WhizzleGooberTestCase(TestCase):
@@ -24,7 +24,7 @@ class WhizzleGooberTestCase(TestCase):
     def setUpClass(cls):
         cls.something = "yeargh!"
         cls.something_else = "blorb"
-        time.sleep(5)
+        time.sleep(15)
         print "setup class |%s|" % cls.__name__
 
     @classmethod
@@ -135,10 +135,8 @@ class UberTestCase(TestCase):
         """
         suites = []
         suites.append(WhizzleGooberTestCase.suite())
-        suites.append(GadgetTestCase.suite())
+        suites.append(WhizzleGooberTestCase.suite())
+#        suites.append(GadgetTestCase.suite())
         suites = EventedTestSuite(suites)
-        suites.thread_suites = False
+        suites.thread_suites = True
         return suites
-
-
-main = Orbitals(UberTestCase)

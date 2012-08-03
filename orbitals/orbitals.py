@@ -7,6 +7,9 @@ eventlet.patcher.monkey_patch(all=True)
 pool = eventlet.GreenPool()
 
 
+__version__ = '1.0.0'
+
+
 class TestCaseHandler(object):
     """
     manages class setup and teardown functions
@@ -16,6 +19,14 @@ class TestCaseHandler(object):
 
     @classmethod
     def setUpClass(cls, c):
+        """
+        idea here is to only run the setup for a testcase class once
+        even if there are multiple occurrences of the class in a suite
+
+        the semaphore is to make sure that any other testcases of
+        the same class which could have been called in parallel will
+        wait for the class setup to finish before running any tests
+        """
         if c not in cls.class_semaphores:
             cls.class_semaphores[c] = eventlet.semaphore.Semaphore()
         with cls.class_semaphores[c]:
@@ -27,6 +38,7 @@ class TestCaseHandler(object):
     def tearDownClasses(cls):
         for c in cls.instantiated_classes:
             c.tearDownClass()
+
 
 class EventedTestSuite(unittest.TestSuite):
     """
@@ -117,6 +129,10 @@ class TestCase(unittest.TestCase):
     def __init__(self, testname, parameters=None):
         super(TestCase, self).__init__(testname)
         self.parameters = parameters
+
+    def assert_parameters(self, *parameters):
+        for p in parameters:
+            self.assertTrue(p in self.parameters)
 
 
 class Orbitals(object):

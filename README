@@ -1,10 +1,12 @@
 to install:
-    clone and you're all set
-    make sure to install dependencies (python, eventlet, etc)
+    clone
+    sudo python setup.py install
 
 to use:
-    cd repo
-    python orbitals_testcase.py
+    orbitals environment testcase
 
-    you can modify the thread test cases and thread test suites booleans
-    to modify the threading behavior
+    to use an included testcase:
+    orbitals environment orbitals.testcases.testcase_file.TestCaseClass
+
+    write your own test cases:
+    orbitals environment path.to.testcase_file.TestCaseClass
