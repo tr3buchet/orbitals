@@ -15,8 +15,8 @@
 #   limitations under the License.
 
 import os
-from setuptools import setup
-from orbitals import orbitals
+from setuptools import setup, find_packages
+#from orbitals import orbitals
 
 
 def read(fname):
@@ -24,14 +24,32 @@ def read(fname):
 
 setup(
     name='orbitals',
-    version=orbitals.__version__,
+#    version=orbitals.__version__,
     author='Trey Morris',
     author_email='trey@treymorris.com',
     description='threaded test runner using python-novaclient and supernova',
     long_description=read('README'),
     install_requires=['python-novaclient', 'supernova'],
-    packages=['orbitals'],
+    packages=find_packages(),
     url='https://github.com/tr3buchet/orbitals',
     entry_points={
         'console_scripts': [
             'orbitals = orbitals.executable:run_orbitals']})
+
+#from setuptools import setup
+#from orbitals import orbitals
+#
+#
+#setup(
+#    name='orbitals',
+#    author='Trey Morris',
+#    author_email='treyemorris@gmail.com',
+#    description='threaded test runner using python-novaclient and supernova',
+#    install_requires=['keyring'],
+#    packages=['orbitals'],
+#    url='https://github.com/tr3buchet/orbitals',
+#    entry_points={
+#        'console_scripts': [
+#            'orbitals = orbitals.executable:run_orbitals'],
+#        }
+#    )

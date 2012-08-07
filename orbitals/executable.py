@@ -1,4 +1,6 @@
 import argparse
+import functools
+import imp
 import os
 
 from novaclient import client
@@ -6,10 +8,6 @@ from novaclient import client
 import orbitals
 from supernova import supernova
 from supernova import executable as sexe
-try:
-    import importlib
-except ImportError:
-    pass
 
 
 def run_orbitals():
@@ -18,8 +16,7 @@ def run_orbitals():
     sexe.check_supernova_conf(sn)
 
     # get arguments
-    # optparse in case i want to add more options later
-    parser = argparse.ArgumentParser('some stuff')
+    parser = argparse.ArgumentParser()
     parser.add_argument('-l', '--list', action=sexe._ListAction,
                         help='list configured environments')
     parser.add_argument('-d', '--debug', action='store_true',
@@ -30,27 +27,28 @@ def run_orbitals():
     parser.add_argument('testcase',
                         help='orbitals testcase to run')
     args = parser.parse_args()
-    print args
 
-#sexe.setup_supernova_env(sn, args.env)
+    # set up the supernova object from args
+    sexe.setup_supernova_env(sn, args.env)
 
-#    nc = get_client(sn.prep_nova_creds(), args.debug)
-    #client.authenticate()
-
-    #create_server(image_uuid='06c6a986-de1f-42e2-9670-dea1869f6525')
-#    list_servers(nc)
-
+    # get testcase class from testcase arg
     testcase = args.testcase.split('.')
     module_name = '.'.join(testcase[:-1])
-    testcase_class = testcase[-1]
-    print 'module_name -> |%s|' % module_name
-    print 'testcase_class -> |%s|' % testcase_class
+    testcase_class_name = testcase[-1]
     try:
-        module = importlib.import_module(module_name)
-    except NameError:
         module = __import__(module_name, fromlist=[''])
+    except ImportError:
+        res = imp.find_module(module_name, [os.getcwd()])
+        module = imp.load_module(module_name, *res)
+    print 'Running test suite from |%s| as defined in |%s|' % \
+          (testcase_class_name, module.__file__)
+    print 'on environment |%s|' % args.env
 
-    orbitals.Orbitals(getattr(module, testcase_class))
+    # retrieve the test class config novaclient and start tests
+    testclass = getattr(module, testcase_class_name)
+    f = functools.partial(get_client, sn.prep_nova_creds(), args.debug)
+    testclass.get_client = f
+    testclass = orbitals.Orbitals(testclass)
 
 
 def get_client(creds, debug=None):
@@ -93,5 +91,3 @@ def get_client(creds, debug=None):
         del client_args['nova_rax_auth']
 
     return client.Client(**client_args)
-
-run_orbitals()

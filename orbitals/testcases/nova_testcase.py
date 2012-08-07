@@ -1,5 +1,6 @@
 import time
 from orbitals import orbitals
+from orbitals import utils
 
 
 class WhizzleGooberTestCase(orbitals.TestCase):
@@ -15,16 +16,17 @@ class WhizzleGooberTestCase(orbitals.TestCase):
         suite = orbitals.EventedTestSuite()
         # add the tests giving each a parameter
         # (can easily be adapted to a set of parameters)
-        suite.addTest(WhizzleGooberTestCase('test1', {'string': 'arrr'}))
-        suite.addTest(WhizzleGooberTestCase('test2', {'string': 'barrr'}))
-        suite.thread_testcases = False
+        for i in xrange(25):
+            suite.addTest(WhizzleGooberTestCase('test_active',
+                                                {'name': 'test_%s' % (i + 1)}))
+#        suite.addTest(WhizzleGooberTestCase('test2', {'string': 'barrr'}))
+        suite.thread_testcases = True
         return suite
 
     @classmethod
     def setUpClass(cls):
-        cls.something = "yeargh!"
-        cls.something_else = "blorb"
-        time.sleep(15)
+        cls.image = utils.get_image_by_name(cls.get_client(), 'Squeeze')
+        cls.flavor = '2'
         print "setup class |%s|" % cls.__name__
 
     @classmethod
@@ -35,24 +37,43 @@ class WhizzleGooberTestCase(orbitals.TestCase):
         """
         anything to be run before each test goes here
         """
-        print "\nbefore test"
+        s = self.client.servers.create(name=self.parameters['name'],
+                              image=self.image.id,
+                              flavor=self.flavor)
+        self.instance = s
+        time.sleep(30)
 
     def tearDown(self):
         """
         anything to be run after each test goes here
         """
-        print "after test"
+        self.client.servers.delete(self.instance.id)
 
-    def test1(self):
+    def retry_create(self, **kwargs):
+        try:
+            return self.client.servers.create(**kwargs)
+        except Exception as e:
+            print e
+#            time.sleep(0.500)
+#            return self.client.servers.create(**kwargs)
+
+    def test_active(self):
         """
         very simple test
         """
-        # example of using something from setUpClass
-        if(self.something):
-            self.something = "works!"
-        print "test1 arg |%s|" % self.parameters
-        time.sleep(5)
-        print "done"
+        while True:
+            try:
+                s = self.client.servers.get(self.instance.id)
+            except Exception as e:
+                print 'get instance %s. error %s' % (self.instance.name, e)
+#                s = self.client.servers.get(self.instance.id)
+
+            if s.status == 'ACTIVE':
+                return
+            if s.status == 'ERROR':
+                raise Exception('Instance |%s| status is in error' %
+                                self.instance.id)
+            time.sleep(5)
 
     def test2(self):
         """
@@ -76,21 +97,18 @@ class GadgetTestCase(orbitals.TestCase):
         suite = orbitals.EventedTestSuite()
         # add the tests giving each a parameter
         # (can easily be adapted to a set of parameters)
-        suite.addTest(GadgetTestCase('test1', {'string': 'xarrr'}))
-        suite.addTest(GadgetTestCase('test2', {'string': 'xbarrr'}))
+        for i in xrange(1000):
+            suite.addTest(GadgetTestCase('test1'))
         suite.thread_testcases = True
         return suite
 
     @classmethod
     def setUpClass(cls):
-        cls.something = "yeargh!"
-        cls.something_else = "blorb"
-        time.sleep(5)
-        print "setup class |%s|" % cls.__name__
+        pass
 
     @classmethod
     def tearDownClass(cls):
-        print "teardown class |%s|" % cls.__name__
+        pass
 
     def setUp(self):
         """
@@ -108,9 +126,8 @@ class GadgetTestCase(orbitals.TestCase):
         """
         very simple test
         """
-        print "test1 arg |%s|" % self.parameters
-        time.sleep(5)
-        print "done"
+        for i in xrange(100):
+            time.sleep(0)
 
     def test2(self):
         """

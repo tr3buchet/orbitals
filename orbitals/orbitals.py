@@ -7,9 +7,6 @@ eventlet.patcher.monkey_patch(all=True)
 pool = eventlet.GreenPool()
 
 
-__version__ = '1.0.0'
-
-
 class TestCaseHandler(object):
     """
     manages class setup and teardown functions
@@ -118,6 +115,8 @@ class TestCase(unittest.TestCase):
     extend unittest.TestCase in order to pass parameters to tests
     """
 
+    get_client = None
+
     @classmethod
     def setUpClass(cls):
         pass
@@ -128,6 +127,7 @@ class TestCase(unittest.TestCase):
 
     def __init__(self, testname, parameters=None):
         super(TestCase, self).__init__(testname)
+        self.client = self.get_client()
         self.parameters = parameters
 
     def assert_parameters(self, *parameters):
@@ -137,4 +137,4 @@ class TestCase(unittest.TestCase):
 
 class Orbitals(object):
     def __init__(self, test_class):
-        EventedTextTestRunner(verbosity=2).run(test_class.suite())
+        EventedTextTestRunner(verbosity=0).run(test_class.suite())
