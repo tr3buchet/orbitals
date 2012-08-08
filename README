@@ -1,12 +1,43 @@
-to install:
-    clone
-    sudo python setup.py install
+## orbitals - write simple unittests which can be run against any supernova environment in a threaded manner
 
-to use:
-    orbitals environment testcase
+orbitals does the following:
+* uses rackerhacker's supernova to allow running tests against any supernova configured environment
+* testcases have access to an object specific python-novaclient instance through self.client
+* allows green threading at both the testcase and suite level using gevent, allowing multiple suites to be run concurrently and/or suites with multiple concurrent tests
+
+### Installation
+
+    git clone git://github.com/tr3buchet/orbitals.git
+    cd orbitals
+    python setup.py install
+
+### Configuration
+
+    Please refer to http://github.com/rackerhack/supernova for instructions setting up supernova
+    No other setup is required
+
+
+### Usage
+
+    orbitals [--help] [--debug] [--list] environment testcase
+
+    positional arguments:
+    env          environment to run tests against, from ~/.supernova
+    testcase     orbitals testcase to run
+
+    optional arguments:
+    -h, --help   show this help message and exit
+    -l, --list   list configured environments
+    -d, --debug  show debug output (overrides NOVACLIENT_DEBUG)
+
 
     to use an included testcase:
     orbitals environment orbitals.testcases.testcase_file.TestCaseClass
 
-    write your own test cases:
-    orbitals environment path.to.testcase_file.TestCaseClass
+    write your own testcases:
+    orbitals environment testcase_file.TestCaseClass
+
+#### A brief note about environment variables
+
+    Orbitals does not use previously set environment variables.
+    Please see the supernova readme for more information.

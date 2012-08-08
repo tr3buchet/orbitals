@@ -1,10 +1,13 @@
-import unittest
 import time
+import unittest
 
-import eventlet
-eventlet.patcher.monkey_patch(all=True)
+from gevent import monkey
+from gevent import pool
+from gevent import coros
+monkey.patch_time()
 
-pool = eventlet.GreenPool()
+
+pool = pool.Group()
 
 
 class TestCaseHandler(object):
@@ -24,12 +27,16 @@ class TestCaseHandler(object):
         the same class which could have been called in parallel will
         wait for the class setup to finish before running any tests
         """
-        if c not in cls.class_semaphores:
-            cls.class_semaphores[c] = eventlet.semaphore.Semaphore()
-        with cls.class_semaphores[c]:
-            if c not in cls.instantiated_classes:
-                cls.instantiated_classes.append(c)
-                c.setUpClass()
+        try:
+            cls.class_semaphores[c].acquire()
+        except KeyError:
+            cls.class_semaphores[c] = coros.Semaphore()
+
+        if c not in cls.instantiated_classes:
+            cls.instantiated_classes.append(c)
+            c.setUpClass()
+
+        cls.class_semaphores[c].release()
 
     @classmethod
     def tearDownClasses(cls):
@@ -39,14 +46,13 @@ class TestCaseHandler(object):
 
 class EventedTestSuite(unittest.TestSuite):
     """
-    extends unittest.TestSuite by adding eventlet thread spawning to
+    extends unittest.TestSuite by adding gevent thread spawning to
     global pool
     """
     def __init__(self, tests=(), pool=pool):
         """
         extended __init__ to set self.pool to global pool
         """
-        self.pool = pool
         unittest.TestSuite.__init__(self, tests)
         self.thread_suites = False
         self.thread_testcases = False
@@ -58,15 +64,15 @@ class EventedTestSuite(unittest.TestSuite):
         for test in self._tests:
             if isinstance(test, EventedTestSuite):
                 if(self.thread_suites):
-                    self.pool.spawn_n(test, result)
+                    pool.spawn(test, result)
                 else:
-                    pool.waitall()
+                    pool.join()
                     test(result)
             else:
                 # setup class if necessary
                 TestCaseHandler.setUpClass(test.__class__)
                 if(self.thread_testcases):
-                    self.pool.spawn_n(test, result)
+                    pool.spawn(test, result)
                 else:
                     test(result)
 
@@ -84,7 +90,7 @@ class EventedTextTestRunner(unittest.TextTestRunner):
         startTime = time.time()
         test(result)
 
-        pool.waitall()
+        pool.join()
         TestCaseHandler.tearDownClasses()
 
         stopTime = time.time()

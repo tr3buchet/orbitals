@@ -2,7 +2,32 @@ import time
 from orbitals import orbitals
 
 
-class WhizzleGooberTestCase(orbitals.TestCase):
+class UberTestCase(orbitals.TestCase):
+    """
+    extend the orbitals.TestCase to create an orbitals test case
+    in this example we have a suite of suites
+
+    Note that if this is the main test case class being run by orbitals,
+    if it will be using suites from other classes, a suite of suites,
+    those classes need to subclass this one in order to inherit the
+    get_client callback attribute from the main test case.
+    """
+
+    @staticmethod
+    def suite():
+        """
+        define the suite of tests to be run
+        """
+        suites = []
+        suites.append(WhizzleGooberTestCase.suite())
+        suites.append(WhizzleGooberTestCase.suite())
+        suites.append(GadgetTestCase.suite())
+        suites = orbitals.EventedTestSuite(suites)
+        suites.thread_suites = True
+        return suites
+
+
+class WhizzleGooberTestCase(UberTestCase):
     """
     extend the orbitals.TestCase to create an orbitals test case
     """
@@ -63,7 +88,7 @@ class WhizzleGooberTestCase(orbitals.TestCase):
         print "done"
 
 
-class GadgetTestCase(orbitals.TestCase):
+class GadgetTestCase(UberTestCase):
     """
     extend the orbitals.TestCase to create an orbitals test case
     """
@@ -119,24 +144,3 @@ class GadgetTestCase(orbitals.TestCase):
         print "test2 arg |%s|" % self.parameters
         time.sleep(5)
         print "done"
-
-
-class UberTestCase(orbitals.TestCase):
-    """
-    extend the orbitals.TestCase to create an orbitals test case
-    in this example this is a super TestCase which uses other test
-    cases
-    """
-
-    @staticmethod
-    def suite():
-        """
-        define the suite of tests to be run
-        """
-        suites = []
-        suites.append(WhizzleGooberTestCase.suite())
-        suites.append(WhizzleGooberTestCase.suite())
-#        suites.append(GadgetTestCase.suite())
-        suites = orbitals.EventedTestSuite(suites)
-        suites.thread_suites = True
-        return suites

@@ -27,9 +27,9 @@ setup(
 #    version=orbitals.__version__,
     author='Trey Morris',
     author_email='trey@treymorris.com',
-    description='threaded test runner using python-novaclient and supernova',
+    description='gevent threaded test runner using novaclient and supernova',
     long_description=read('README'),
-    install_requires=['python-novaclient', 'supernova'],
+    install_requires=['python-novaclient', 'supernova', 'gevent'],
     packages=find_packages(),
     url='https://github.com/tr3buchet/orbitals',
     entry_points={
